@@ -130,6 +130,10 @@
 
 #define ROOT "/"
 
+#define NONEFS_TYPE     "None FS"
+#define SMARTFS_TYPE    "smartfs"
+#define PROCFS_TYPE     "procfs"
+#define ROMFS_TYPE      "romfs"
 
 /****************************************************************************
  * Global Variables
@@ -208,7 +212,31 @@ static int make_long_file(void)
 	printf("finished!\n");
 	return ret;
 }
+#ifndef CONFIG_DISABLE_ENVIRON
+static int handler(FAR const char *mountpoint, FAR struct statfs *statbuf, FAR void *arg)
+{
+		char *fstype;
+		switch (statbuf->f_type) {
+		case SMARTFS_MAGIC:
+			fstype = SMARTFS_TYPE;
+			break;
+		case ROMFS_MAGIC:
+			fstype = ROMFS_TYPE;
+			break;
+		case PROCFS_MAGIC:
+			fstype = PROCFS_TYPE;
+			break;
+		default:
+			fstype = NONEFS_TYPE;
+			break;
+	}
+	return OK;
 
+}
+static int mount_show(foreach_mountpoint_t mount_handler, FAR void *arg)
+{
+		return foreach_mountpoint(mount_handler, arg);
+}
 /**
 * @testcase         tc_fs_vfs_mount
 * @brief            Mount file system
@@ -220,11 +248,22 @@ static int make_long_file(void)
 static void tc_fs_vfs_mount(void)
 {
 	int ret;
+#ifdef CONFIG_TASH
+	char *buff = "mount";
+#endif
 	ret = mount(MOUNT_DEV_DIR, CONFIG_MOUNT_POINT, TARGET_FS_NAME, 0, NULL);
 	TC_ASSERT_EQ("mount", ret, OK);
+	/*For each mountpt operation*/
+#if CONFIG_TASH
+		ret = tash_execute_cmd (&buff, 1);
+		TC_ASSERT_EQ("tash_mount", ret, OK);
+#else
+		ret = mount_show(handler, 1);
+		TC_ASSERT_EQ("mount_show", ret, OK);
+#endif
 	TC_SUCCESS_RESULT();
 }
-
+#endif
 /**
 * @testcase         tc_fs_vfs_umount
 * @brief            Unmount file system
@@ -3071,7 +3110,9 @@ static int fs_sample_launcher(int argc, char **args)
 	total_fail = 0;
 
 	tc_fs_vfs_umount();
+#ifndef CONFIG_DISABLE_ENVIRON
 	tc_fs_vfs_mount();
+#endif
 	tc_fs_vfs_open();
 	tc_fs_vfs_write();
 	tc_fs_vfs_read();
