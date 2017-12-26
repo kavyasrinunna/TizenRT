@@ -48,6 +48,7 @@ config TC_KN_ALL
 	select TC_KERNEL_TASK
 	select TC_KERNEL_TIMER
 	select TC_KERNEL_UMM_HEAP
+	select TC_KERNEL_WORK_QUEUE
 
 config TC_KERNEL_CLOCK
 	bool "Clock"
@@ -198,6 +199,10 @@ config TC_KERNEL_TASH_HEAPINFO
 
 config TC_KERNEL_TASH_STACKMONITOR
 	bool "StackMonitor"
+	default n
+
+config TC_KERNEL_WORK_QUEUE
+	bool "wqueue"
 	default n
 
 endif #EXAMPLES_TESTCASE_KERNEL

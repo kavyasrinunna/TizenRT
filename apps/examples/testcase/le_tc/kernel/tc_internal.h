@@ -90,5 +90,5 @@ int timer_main(void);
 int umm_heap_main(void);
 int tash_heapinfo_main(void);
 int tash_stackmonitor_main(void);
-
+int wqueue_main(void);
 #endif /* __EXAMPLES_TESTCASE_KERNEL_TC_INTERNAL_H */

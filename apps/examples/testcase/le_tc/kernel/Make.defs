@@ -152,6 +152,10 @@ endif
 ifeq ($(CONFIG_TC_KERNEL_TASH_STACKMONITOR),y)
   CSRCS += tc_tash_stackmonitor.c
 endif
+ifeq ($(CONFIG_TC_KERNEL_WORK_QUEUE),y)
+  CSRCS += tc_wqueue.c
+endif
+
 
 # Include kernel build support
 
