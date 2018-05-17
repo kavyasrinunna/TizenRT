@@ -359,6 +359,15 @@ int board_app_initialize(void)
 		lldbg("Failed to mount procfs at %s: %d\n",
 				SIDK_S5JT200_PROCFS_MOUNTPOINT, ret);
 	}
+
+#endif
+#ifdef CONFIG_FS_TMPFS
+	/* Mount the procfs file system */
+	ret = mount(NULL, SIDK_S5JT200_TMPFS_MOUNTPOINT, "tmpfs", 0, NULL);
+	if (ret < 0) {
+		lldbg("Failed to mount tmpfs at %s: %d\n",
+				SIDK_S5JT200_TMPFS_MOUNTPOINT, ret);
+	}
 #endif
 
 #if defined(CONFIG_RAMMTD) && defined(CONFIG_FS_SMARTFS)

@@ -62,6 +62,9 @@
 #ifdef CONFIG_FS_PROCFS
 #define SIDK_S5JT200_PROCFS_MOUNTPOINT	"/proc"
 #endif
+#ifdef CONFIG_FS_TMPFS
+#define SIDK_S5JT200_TMPFS_MOUNTPOINT	"/tmp"
+#endif
 
 enum configdata_id {
 	SIDK_S5JT200_CONFIGDATA_PLATFORM	= 0xff00,
